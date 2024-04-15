@@ -12,7 +12,12 @@
       </div>
     </div>
 
-    <example-component title="Example component" active :todos="todos" :meta="meta"></example-component>
+    <example-component
+      title="Example component"
+      active
+      :todos="todos"
+      :meta="meta"
+    ></example-component>
   </q-page>
 </template>
 
