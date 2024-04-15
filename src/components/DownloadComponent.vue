@@ -8,12 +8,7 @@
       -->
       <!-- buttons example -->
       <q-card-actions align="right">
-        <q-btn
-          color="primary"
-          label="Close"
-          icon="close"
-          @click="onCancelClick"
-        />
+        <q-btn color="primary" label="Close" icon="close" @click="onCancelClick" />
       </q-card-actions>
 
       <q-card-section>
@@ -28,27 +23,19 @@
             <div class="text-h6">Download links</div>
             <div class="q-pa-md">
               <div class="row" bordered separator>
-                <div
-                  class="q-pa-md col col-md-3 col-sm-6 col-xs-12"
-                  v-ripple
-                  v-for="selectedLink in selectedLinks"
-                  v-bind:key="selectedLink.uid"
-                >
-                  <a
-                    href="javascript:void(0)"
-                    @click.prevent="
-                      downloadRequest(
-                        selectedLink.link,
-                        selectedLink.year +
-                          '-' +
-                          selectedLink.historyData.ticker
-                      )
-                    "
-                    ><q-icon name="insert_drive_file" />{{
+                <div class="q-pa-md col col-md-3 col-sm-6 col-xs-12" v-ripple v-for="selectedLink in selectedLinks"
+                  v-bind:key="selectedLink.uid">
+                  <a href="javascript:void(0)" @click.prevent="
+                    downloadRequest(
+                      selectedLink.link,
+                      selectedLink.year +
+                      '-' +
+                      selectedLink.historyData.ticker
+                    )
+                    "><q-icon name="insert_drive_file" />{{
                       selectedLink.historyData.name
                     }}
-                    {{ selectedLink.year }}</a
-                  >
+                    {{ selectedLink.year }}</a>
                 </div>
               </div>
             </div>
@@ -57,12 +44,7 @@
             <div class="">
               <div class="text-h6">Bash script</div>
               <q-btn @click="copyToClipboard(bashScript)" icon="file_copy">
-                <q-tooltip
-                  anchor="center right"
-                  self="center left"
-                  :offset="[10, 10]"
-                  >Copy to clipboard</q-tooltip
-                >
+                <q-tooltip anchor="center right" self="center left" :offset="[10, 10]">Copy to clipboard</q-tooltip>
               </q-btn>
               <prism-code language="bash">{{ bashScript }}</prism-code>
             </div>
@@ -70,12 +52,7 @@
           <q-tab-panel name="cmd">
             <div class="text-h6">Windows cmd</div>
             <q-btn @click="copyToClipboard(cmdScript)" icon="file_copy">
-              <q-tooltip
-                anchor="center right"
-                self="center left"
-                :offset="[10, 10]"
-                >Copy to clipboard</q-tooltip
-              >
+              <q-tooltip anchor="center right" self="center left" :offset="[10, 10]">Copy to clipboard</q-tooltip>
             </q-btn>
             <prism-code language="batch">{{ cmdScript }}</prism-code>
           </q-tab-panel>
@@ -160,8 +137,7 @@ export default {
           .flatMap((selectedVal) =>
             selectedVal?.years?.map(
               (year) =>
-                `"${toDowloadLink(selectedVal.uid, year)}" "${
-                  selectedVal.uid
+                `"${toDowloadLink(selectedVal.uid, year)}" "${selectedVal.uid
                 }_${year}.zip"`
             )
           )
@@ -194,10 +170,8 @@ done
           .flatMap((selectedVal) =>
             selectedVal?.years?.map(
               (year) =>
-                `powershell -Command "Invoke-WebRequest -Headers @{'Authorization' = 'Bearer ${
-                  token.value
-                }'}  '${toDowloadLink(selectedVal.uid, year)}'  -OutFile '${
-                  selectedVal.uid
+                `powershell -Command "Invoke-WebRequest -Headers @{'Authorization' = 'Bearer ${token.value
+                }'}  '${toDowloadLink(selectedVal.uid, year)}'  -OutFile '${selectedVal.uid
                 }_${year}.zip'"`
             )
           )
@@ -230,7 +204,7 @@ done
     );
 
     async function downloadRequest(link: string, filename: string) {
-      
+
       await api
         .get(link, {
           responseType: 'blob',
@@ -239,8 +213,8 @@ done
           },
         })
         .then((response) => {
-         
-            
+
+
           // create file link in browser's memory
           const href = URL.createObjectURL(response.data);
           alert("QQQQ")
@@ -255,9 +229,9 @@ done
           document.body.removeChild(link);
           URL.revokeObjectURL(href);
           $q.notify('Download done');
-          
+
         });
-    
+
     }
 
     return {

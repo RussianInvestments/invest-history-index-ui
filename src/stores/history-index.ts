@@ -12,9 +12,7 @@ export const useHistoryStore = defineStore('historyStore', {
   }),
 
   getters: {
-
     historyIndexList(state) {
-      //alert("Hie from historyIndexList")
       return Array.from(state.historyIndex.values())
         .filter(
           (item) => item.links.filter((y) => y.archiveSizeBytes > 22).length > 0
@@ -31,10 +29,9 @@ export const useHistoryStore = defineStore('historyStore', {
       return state.token;
     },
   },
-  // Hier need exception page or in DownloadComponent
+
   actions: {
     toggleSelect(uid: string) {
-      //alert(uid)
       if (!this.historyIndex.has(uid)) return;
       const selectedSet = new Set(this.selectedUids);
       const selected = selectedSet.has(uid);
@@ -58,7 +55,6 @@ export const useHistoryStore = defineStore('historyStore', {
 
       const jsonData = response.data.instruments;
       const keys = Object.keys(jsonData);
-      //alert(keys)
       keys.forEach((jsonKey) => {
         const jsonObj = jsonData[jsonKey];
         historyIndex.set(jsonObj.uid, {
@@ -77,7 +73,6 @@ export const useHistoryStore = defineStore('historyStore', {
             };
           }),
         } as HistoryData);
-        //alert(historyIndex.get(jsonObj.uid))
       });
     },
     setAuthToken(token: string) {

@@ -196,36 +196,37 @@ export default defineComponent({
 
     async function downloadRequest(link: string, filename: string) {
 
-      const downloadFunc = async () =>{
-        //("Hello from download request")
-      try {
-        await api
-          .get(link, {
-            responseType: 'blob',
-            headers: {
-              Authorization: 'Bearer ' + historyStore.token,
-            },
-          })
-          .then((response) => {
-            // create file link in browser's memory
-            const href = URL.createObjectURL(response.data);
+      const downloadFunc = async () => {
 
-            // create "a" HTML element with href to file & click
-            const link = document.createElement('a');
-            link.href = href;
-            link.setAttribute('download', filename + '.zip'); //or any other extension
-            document.body.appendChild(link);
-            link.click();
+        try {
+          await api
+            .get(link, {
+              responseType: 'blob',
+              headers: {
+                Authorization: 'Bearer ' + historyStore.token,
+              },
+            })
+            .then((response) => {
+              // create file link in browser's memory
+              const href = URL.createObjectURL(response.data);
 
-            // clean up "a" element & remove ObjectURL
-            document.body.removeChild(link);
-            URL.revokeObjectURL(href);
-            $q.notify('Download done');
-          });
+              // create "a" HTML element with href to file & click
+              const link = document.createElement('a');
+              link.href = href;
+              link.setAttribute('download', filename + '.zip'); //or any other extension
+              document.body.appendChild(link);
+              link.click();
+
+              // clean up "a" element & remove ObjectURL
+              document.body.removeChild(link);
+              URL.revokeObjectURL(href);
+              $q.notify('Download done');
+            });
+        }
+        catch (err) {
+          $q.notify('Error: ' + err);
+        }
       }
-      catch (err) {
-        $q.notify('Error: '+err);
-      }}
 
       if (!historyStore.token || historyStore.token.trim().length < 1) {
         promptAuthToken(downloadFunc);
