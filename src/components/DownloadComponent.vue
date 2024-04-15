@@ -230,6 +230,7 @@ done
     );
 
     async function downloadRequest(link: string, filename: string) {
+      
       await api
         .get(link, {
           responseType: 'blob',
@@ -238,9 +239,11 @@ done
           },
         })
         .then((response) => {
+         
+            
           // create file link in browser's memory
           const href = URL.createObjectURL(response.data);
-
+          alert("QQQQ")
           // create "a" HTML element with href to file & click
           const link = document.createElement('a');
           link.href = href;
@@ -252,7 +255,9 @@ done
           document.body.removeChild(link);
           URL.revokeObjectURL(href);
           $q.notify('Download done');
+          
         });
+    
     }
 
     return {

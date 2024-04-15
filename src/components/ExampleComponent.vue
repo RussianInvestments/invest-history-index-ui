@@ -1,36 +1,12 @@
 <template>
-  <q-table
-    flat
-    bordered
-    title="Instruments"
-    selection="multiple"
-    v-model:selected="selected"
-    :rows="historyIndexList"
-    :columns="columns"
-    row-key="uid"
-    :rows-per-page-options="[20, 30, 50, 100]"
-    :filter="filter"
-    :filter-method="filterMethod"
-    style="min-width: 500px; width: 100%"
-  >
+  <q-table flat bordered title="Instruments" selection="multiple" v-model:selected="selected" :rows="historyIndexList"
+    :columns="columns" row-key="uid" :rows-per-page-options="[20, 30, 50, 100]" :filter="filter"
+    :filter-method="filterMethod" style="min-width: 500px; width: 100%">
     <template v-slot:top-right>
-      <q-option-group
-        dense
-        inline
-        v-model="filter.instrumentTypes"
-        :options="allInstrumentTypes"
-        color="green"
-        type="checkbox"
-        style="padding-right: 16pt"
-      />
+      <q-option-group dense inline v-model="filter.instrumentTypes" :options="allInstrumentTypes" color="green"
+        type="checkbox" style="padding-right: 16pt" />
       <span>&nbsp;</span>
-      <q-input
-        bordered
-        dense
-        debounce="300"
-        v-model="filter.text"
-        placeholder="Search Ticker"
-      >
+      <q-input bordered dense debounce="300" v-model="filter.text" placeholder="Search Ticker">
         <template v-slot:append>
           <q-icon name="search" />
         </template>
@@ -39,14 +15,8 @@
     <template v-slot:top-left>
       <q-toolbar class="text-primary">
         <q-toolbar-title> </q-toolbar-title>
-        <q-btn
-          flat
-          dense
-          label="Сгенерировать скрипт"
-          icon="file_download"
-          :disable="selected.length < 1"
-          @click="showDialog"
-        />
+        <q-btn flat dense label="Сгенерировать скрипт" icon="file_download" :disable="selected.length < 1"
+          @click="showDialog" />
       </q-toolbar>
     </template>
 
@@ -56,35 +26,21 @@
           <q-checkbox dense v-model="props.selected" :label="props.row.name" />
         </q-td>
 
-        <q-td
-          v-for="col in props.cols.filter(
-            (col) => col.name !== 'selected' && col.name !== 'years'
-          )"
-          :key="col.name"
-          :props="props"
-        >
+        <q-td v-for="col in props.cols.filter(
+          (col) => col.name !== 'selected' && col.name !== 'years'
+        )" :key="col.name" :props="props">
           {{ col.value }}
         </q-td>
         <q-td>
-          <span
-            class="q-pr-sm col col-md-3 col-sm-6 col-xs-12"
-            v-ripple
-            v-for="selectedLink in props.row.links"
-            v-bind:key="selectedLink.year"
-          >
-            <a
-              href="javascript:void(0)"
-              :title="
-                'Скачать архив ' + selectedLink.year + ' ' + props.row.ticker
-              "
-              @click.prevent="
+          <span class="q-pr-sm col col-md-3 col-sm-6 col-xs-12" v-ripple v-for="selectedLink in props.row.links"
+            v-bind:key="selectedLink.year">
+            <a href="javascript:void(0)" :title="'Скачать архив ' + selectedLink.year + ' ' + props.row.ticker
+              " @click.prevent="
                 downloadRequest(
                   selectedLink.link,
                   selectedLink.year + '-' + props.row.ticker
                 )
-              "
-              ><q-icon name="insert_drive_file" /> {{ selectedLink.year }}</a
-            >
+                "><q-icon name="insert_drive_file" /> {{ selectedLink.year }}</a>
           </span>
         </q-td>
       </q-tr>
@@ -213,6 +169,7 @@ export default defineComponent({
 
     function showDownloadDialog(selectedObjects: Ref<HistoryData[]>) {
       const showDialog = () => {
+
         $q.dialog({
           component: DownloadComponent,
           componentProps: {
@@ -238,7 +195,10 @@ export default defineComponent({
     }
 
     async function downloadRequest(link: string, filename: string) {
-      const downloadFunc = async () =>
+
+      const downloadFunc = async () =>{
+        //("Hello from download request")
+      try {
         await api
           .get(link, {
             responseType: 'blob',
@@ -262,12 +222,17 @@ export default defineComponent({
             URL.revokeObjectURL(href);
             $q.notify('Download done');
           });
+      }
+      catch (err) {
+        $q.notify('Error: '+err);
+      }}
 
       if (!historyStore.token || historyStore.token.trim().length < 1) {
         promptAuthToken(downloadFunc);
       } else {
         downloadFunc();
       }
+
     }
 
     function promptAuthToken(then) {
@@ -282,7 +247,7 @@ export default defineComponent({
         cancel: true,
         persistent: true,
       }).onOk((data) => {
-        // console.log('>>>> OK, received', data)
+        console.log('>>>> OK, received', data)
         historyStore.setAuthToken(data);
         if (then) then();
       });
