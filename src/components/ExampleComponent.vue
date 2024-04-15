@@ -45,43 +45,6 @@
         </q-td>
       </q-tr>
     </template>
-
-    <!-- <template v-slot:item="props">
-      <div
-        class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-3 grid-style-transition"
-        :style="props.selected ? 'transform: scale(0.95);' : ''"
-      >
-        <q-card
-          bordered
-          flat
-          :class="
-            props.selected ? ($q.dark.isActive ? 'bg-grey-9' : 'bg-grey-2') : ''
-          "
-        >
-          <q-card-section>
-            <q-checkbox
-              dense
-              v-model="props.selected"
-              :label="props.row.name"
-            />
-          </q-card-section>
-          <q-separator />
-          <q-list dense>
-            <q-item
-              v-for="col in props.cols.filter((col) => col.name !== 'selected')"
-              :key="col.name"
-            >
-              <q-item-section>
-                <q-item-label>{{ col.label }}</q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-item-label caption>{{ col.value }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-card>
-      </div>
-    </template> -->
   </q-table>
 </template>
 
@@ -207,24 +170,26 @@ export default defineComponent({
               },
             })
             .then((response) => {
-              // create file link in browser's memory
               const href = URL.createObjectURL(response.data);
-
-              // create "a" HTML element with href to file & click
               const link = document.createElement('a');
               link.href = href;
-              link.setAttribute('download', filename + '.zip'); //or any other extension
+              link.setAttribute('download', filename + '.zip');
               document.body.appendChild(link);
               link.click();
-
-              // clean up "a" element & remove ObjectURL
               document.body.removeChild(link);
               URL.revokeObjectURL(href);
-              $q.notify('Download done');
+              $q.notify({
+                message: 'Download done',
+                color: 'blue',
+              });
             });
         }
         catch (err) {
-          $q.notify('Error: ' + err);
+          $q.notify({
+            message: 'Error: ' + err,
+            icon: 'announcement',
+            color: 'red-10',
+          });
         }
       }
 
@@ -242,8 +207,8 @@ export default defineComponent({
         message: 'Please input your tinkoff token',
         prompt: {
           model: '',
-          isValid: (val) => val.length == 88, // << here is the magic
-          type: 'password', // optional
+          isValid: (val) => val.length == 88,
+          type: 'password',
         },
         cancel: true,
         persistent: true,

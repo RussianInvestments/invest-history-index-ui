@@ -77,7 +77,6 @@ import { useHistoryStore } from 'stores/history-index';
 import { api } from 'boot/axios';
 import { HistoryData } from './models';
 import 'prismjs/themes/prism.css';
-// import Prism from 'prismjs';
 import PrismCode from './PrismCode.vue';
 
 const toDowloadLink = (uid: string, year: number) =>
@@ -95,8 +94,6 @@ export default {
   },
 
   emits: [
-    // REQUIRED; need to specify some events that your
-    // component will emit through useDialogPluginComponent()
     ...useDialogPluginComponent.emits,
   ],
 
@@ -104,16 +101,8 @@ export default {
 
   setup(props) {
     const $q = useQuasar();
-    // REQUIRED; must be called inside of setup()
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
       useDialogPluginComponent();
-    // dialogRef      - Vue ref to be applied to QDialog
-    // onDialogHide   - Function to be used as handler for @hide on QDialog
-    // onDialogOK     - Function to call to settle dialog with "ok" outcome
-    //                    example: onDialogOK() - no payload
-    //                    example: onDialogOK({ /*.../* }) - with payload
-    // onDialogCancel - Function to call to settle dialog with "cancel" outcome
-
     function copyToClipboard(text: string) {
       navigator.clipboard.writeText(text).then(() => {
         $q.notify('Copied to clipboard');
@@ -213,19 +202,12 @@ done
           },
         })
         .then((response) => {
-
-
-          // create file link in browser's memory
           const href = URL.createObjectURL(response.data);
-          alert("QQQQ")
-          // create "a" HTML element with href to file & click
           const link = document.createElement('a');
           link.href = href;
-          link.setAttribute('download', filename + '.zip'); //or any other extension
+          link.setAttribute('download', filename + '.zip');
           document.body.appendChild(link);
           link.click();
-
-          // clean up "a" element & remove ObjectURL
           document.body.removeChild(link);
           URL.revokeObjectURL(href);
           $q.notify('Download done');
@@ -235,23 +217,11 @@ done
     }
 
     return {
-      // This is REQUIRED;
-      // Need to inject these (from useDialogPluginComponent() call)
-      // into the vue scope for the vue html template
       dialogRef,
       onDialogHide,
-
-      // other methods that we used in our vue html template;
-      // these are part of our example (so not required)
       onOKClick() {
-        // on OK, it is REQUIRED to
-        // call onDialogOK (with optional payload)
         onDialogOK();
-        // or with payload: onDialogOK({ ... })
-        // ...and it will also hide the dialog automatically
       },
-
-      // we can passthrough onDialogCancel directly
       onCancelClick: onDialogCancel,
       bashScript,
       cmdScript,
