@@ -52,6 +52,7 @@ export const useHistoryStore = defineStore('historyStore', {
       const response = await api.get(
         '/invest-history-index-ui/history-index.json'
       );
+
       const jsonData = response.data.instruments;
       const keys = Object.keys(jsonData);
       keys.forEach((jsonKey) => {
